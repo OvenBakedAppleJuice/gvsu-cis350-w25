@@ -1,37 +1,57 @@
-Team name:
-B Triple J
-Team members:
-Blake, Joseph, Jason, Josh
+Team name: The Text Editors
+
+Team members: Gab Borja, Cardell Taylor, John Le, Charlie Monteresso
+
 # Introduction
 
-(In 2-4 paragraphs, describe your project concept)
-Audio-Responsive LED Display
-Create a system where the Arduino Uno controls a strip of LEDs that respond to real-time audio input. A Python script will capture sound from a microphone and analyze the volume (amplitude) or pitch (frequency), then send that data over serial to the Arduino, which will adjust the LED brightness, color, or pattern accordingly.
+Our project will be a text editor similar to that of Notepad or Google Docs that allows users to create, edit, and save text documents. The application will have all the fundamental text manipulation features found in other text editors. It will be designed mostly for casual writers who need a simple and easy to use text editor.
 
-(Also define some loosely defined features of your project using bullet points)
+The editor will include formatting options, basic file management features, and customizable themes for a more personal user experience. Additional features may include real time collaboration or searching capabilities. The primary goal is to create an efficient and easy to use text editor that can be easily pulled up and used for tasks like note taking.
+
+**Features**
+- Basic text editing (cut, copy, paste, undo, redo)
+- Formatting options (bold, italic, underline, font size)
+- File operations (create, open, save, export)
+- Theme customization
 
 # Anticipated Technologies
-LEDs, Arduino Uno, Microcontrollers
-(What technologies are needed to build this project)
 
-====NEED FILL IN DATA====
+Technologies that may be needed for this project include:
+
+## Front End
+- HTML
+- CSS (Bootstrap Framework)
+- JavaScript
+
+## Backend
+- Python
+- Flask or Electron framework
 
 # Method/Approach
 
-====NEED FILL IN DATA====
+Our approach will be to create a minimum viable product and add additional features afterwards. We will be using Trello to manage and assign tasks, using an Agile development process. 
 
-(What is your estimated "plan of attack" for developing this project)
+Some steps include:
+
+1. Research and Planning - Define the key features and scope and finalize the technology stack
+2. UI/UX Design - Design the interface using Figma
+3. Frontend Development - Create the text editor's main interface and interactive elements
+4. Backend Development - Implement file management features and formatting options
+5. Integration and Testing - Connect the frontend and backend and test for bugs
+6. Deployment and Updates - Deploy the application, gather user feedback, and improve features
 
 # Estimated Timeline
 
-====NEED FILL IN DATA====
-
-(Figure out what your major milestones for this project will be, including how long you anticipate it *may* take to reach that point)
+- Week 1-2: Planning, UI/UX Design
+- Week 3-4: Frontend Development (Interface, Interactive Elements)
+- Week 5-6: Backend Development (File management, Formatting)
+- Week 7-8: Integrating, Testing, Debugging
+- Week 9: Deployment and Final Adjusments
 
 # Anticipated Problems
 
-====NEED FILL IN DATA====
-
-(Describe any problems you foresee that you will need to overcome)
+- Problems in implementing the GUI
+- Possible issues with implementing version control feature
 
 Remember this is a living document is expected to be changed as you make progress on your project.
+

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Jotter</title>
+        <link rel="stylesheet" href="styles.css">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    </head>
+    <body>
+        <div class="container">
+            <div class="toolbar">
+                <div class="head">
+                        <input id="file-name" type="text" placeholder="Untitled" value="untitled">
+                        <button id="new-button" class="toolbar-button"><i class='bx bx-file'></i></button> 
+                    <button id="load-button" class="toolbar-button"><i class='bx bx-folder-open'></i></button>
+                    <button id="save-button" class="toolbar-button"><i class='bx bx-save'></i></button>
+                        <input type = "file", id="file-input" accept=".txt,.docx,.md" style="display: none;">
+                        <select id="fileSelect">
+                            <option value="" selected hidden disabled>File</option>
+                            <option value="new">New File</option>
+                            <option value="txt">Save as .txt</option>
+                            <option value="pdf">Save as .pdf</option>
+                            <option value="md">Save as .md</option>
+                            <option value="docx">Save as .docx</option>
+                        </select>
+                        <select onchange="executeCommand('formatBlock', this.value); this.selectedIndex=0;">
+                            <option value="" selected hidden disabled>Format</option>
+                            <option value="h1">Heading 1</option>
+                            <option value="h2">Heading 2</option>
+                            <option value="h3">Heading 3</option>
+                            <option value="h4">Heading 4</option>
+                            <option value="h5">Heading 5</option>
+                            <option value="h6">Heading 6</option>
+                            <option value="p">Paragraph</option>
+                        </select>
+                        <select onchange="executeCommand('fontSize', this.value);">
+                            <option value="" selected hidden disabled>Font Size</option>
+                            <option value="10">Extra Small</option>
+                            <option value="12">Small</option>
+                            <option value="16">Regular</option>
+                            <option value="20">Medium</option>
+                            <option value="24">Large</option>
+                            <option value="32">Extra Large</option>
+                            <option value="40">Big</option>
+                        </select>
+                        <div class="color">
+                            <span>Color</span>
+                            <input id="colorPicker" type="color">
+                        </div>
+                        <div class="color">
+                            <span>Highlight</span>
+                            <input id="highlightPicker" type="color">
+                        </div>
+                        <button id="theme-toggle">Toggle Theme <i class='bx bx-sun'></i></button>
+                </div>
+                <div class="buttons">
+                    <button onclick="executeCommand('undo')"><i class='bx bx-undo'></i></button>
+                    <button onclick="executeCommand('redo')"><i class='bx bx-redo'></i></button>
+                    <button onclick="executeCommand('bold')"><i class='bx bx-bold'></i></button>
+                    <button onclick="executeCommand('underline')"><i class='bx bx-underline'></i></button>
+                    <button onclick="executeCommand('italic')"><i class='bx bx-italic'></i></button>
+                    <button onclick="executeCommand('strikeThrough')"><i class='bx bx-strikethrough'></i></button>
+                    <button onclick="executeCommand('justifyLeft')"><i class='bx bx-align-left'></i></button>
+                    <button onclick="executeCommand('justifyCenter')"><i class='bx bx-align-middle'></i></button>
+                    <button onclick="executeCommand('justifyRight')"><i class='bx bx-align-right'></i></button>
+                    <button onclick="executeCommand('justifyFull')"><i class='bx bx-align-justify'></i></button>
+                    <button onclick="executeCommand('insertOrderedList')"><i class='bx bx-list-ol'></i></button>
+                    <button onclick="executeCommand('insertUnorderedList')"><i class='bx bx-list-ul'></i></button>
+                    <button onclick="addLink()"><i class='bx bx-link'></i></button>
+                    <button onclick="executeCommand('unlink')"><i class='bx bx-unlink'></i></button>
+                    <button id="show-code" data-active="false"><i class='bx bx-code-alt'></i></button>
+                </div>
+            </div>
+            <div id="content" contenteditable="true" spellcheck="false"></div>
+
+        </div>
+
+        <!-- Modal for saving files -->
+        <div id="saveModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Save File</h2>
+                <button id="saveFileButton">Save</button>
+            </div>
+        </div>
+    </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.29.0/docxtemplater.min.js"></script>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="script.js"></script>
+</html>
