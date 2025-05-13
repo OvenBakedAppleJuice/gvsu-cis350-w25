@@ -5,17 +5,17 @@ Hold a team meeting at least once a week in some format. Copy the following temp
 
 # Meeting Minutes Templates
 
-Team name:
+Team name: B Triple J
 
-Members present:
+Members present: Josh, Jason, Joseph, Blake
 
-Date:
+Date: 5/13/2025
 
-Time:
+Time: 6:23Pm
 
 Discussion points:
 
-*   
+*   Project Ideas, general ideas, planning, learning project requirements
 * 
 * 
 
