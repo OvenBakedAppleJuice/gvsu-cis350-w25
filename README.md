@@ -11,7 +11,7 @@ Remember this is a living document that is expected to be changed as you make pr
 # Team Members and Roles
 
 * [Josh Dobbs](https://github.com/OvenBakedAppleJuice/CIS350-HW2-DOBBS) (GitHub Manager, ###)
-* Member 2 (Role 3, Role 4)
+* [Jason Gray-Moore] (https://github.com/graymooj/CIS350-HW2-Gray-Moore.git) (Tester)
 * Member 3 (Role 5, Role 6)
 
 # Prerequisites
