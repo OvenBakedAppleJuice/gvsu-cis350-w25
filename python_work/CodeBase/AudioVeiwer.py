@@ -1,8 +1,5 @@
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import numpy as np
-
-
 
 
 class PlotBins:
@@ -12,20 +9,33 @@ class PlotBins:
     def __init__(self, root):
         self.root = root
 
-    def plotBins(self, bins):
+        bins = [0 for i in range(16)]
+        self.x_pos = [(i+1) for i in range(16)]
+
         #fig, ax = plt.subplots(dpi=DPI)
-        fig, ax = plt.subplots()
-        ax.set_title("Histogram of Frequency.")
-        ax.hist(bins)
-        ax.autoscale_view()
+        fig, self.ax = plt.subplots()
+        self.ax.set_title("Histogram of Frequency.")
+
+        self.barContainer = self.ax.bar(self.x_pos, bins, color='skyblue')
+
+        self.ax.autoscale_view()
 
         # Remove x-axis and y-axis ticks and labels
-        ax.set_xticks([])
-        ax.set_yticks([])
-        ax.set_ylabel("Volume")
-        ax.set_xlabel("Frequency")
+        self.ax.set_xticks([])
+        self.ax.set_yticks([])
+        self.ax.set_ylabel("Volume")
+        self.ax.set_xlabel("Frequency")
+        self.ax.set_ylim(0, 2000000)
+        self.ax.set_xlim(0, 17)
 
-        canvas = FigureCanvasTkAgg(fig, master=self.root)
-        canvas.draw()
-        return canvas.get_tk_widget()
+        self.canvas = FigureCanvasTkAgg(fig, master=self.root)
+        self.canvas.draw()
+
+    def plotBins(self, bins):
+        for patch in self.barContainer.patches:
+            patch.remove()
         
+        self.barContainer = self.ax.bar(self.x_pos, bins, color='blue')
+
+        self.canvas.draw()
+        return self.canvas.get_tk_widget()

@@ -37,7 +37,7 @@ class AudioInput:
         https://pythonnumericalmethods.studentorg.berkeley.edu/notebooks/chapter24.04-FFT-in-Python.html
         """
         signal = self.GetAudioData()
-        signal = signal / np.max(np.abs(signal))
+        # signal = signal / np.max(np.abs(signal))
 
         # Apply the FFT. The output is complex.
         fft_output = np.fft.fft(signal)
@@ -70,9 +70,9 @@ class AudioInput:
     
     def GetSixteenFrequencies(self):
         freq, mags = self.getFft()
-        freqBins = [(0, 133), (133, 266), (266, 399), (399, 532), (532, 665), (665, 798), 
-                    (798, 931), (931, 1064), (1064, 1197), (1197, 1330), (1330, 1463), 
-                    (1463, 1596), (1596, 1729), (1729, 1862), (1862, 1995), (1995, 20000)]
+        freqBins = [(0, 100), (100, 160), (160, 220), (220, 280), (280, 340), (340, 400), (400, 460), 
+                    (460, 520), (520, 580), (580, 640), (640, 700), (700, 760), (760, 820), 
+                    (820, 880), (880, 940), (1000, 20000)]
         
         binIndicies = [[] for i in range(16)]
         binMagnitudes = [0 for i in range(16)]

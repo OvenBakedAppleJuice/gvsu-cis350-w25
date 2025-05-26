@@ -64,25 +64,26 @@ class AudioViz_GUI(tk.CTk):
         self.binsPlot = PlotBins(self)
 
         #initializes and starts main task, daemon=True means the thread stops when the main thread stops
-        main_task = threading.Thread(target=self.mainLoop, daemon=True)
-        main_task.start()
+        #main_task = threading.Thread(target=self.mainLoop, daemon=True)
+        #main_task.start()
+        self.mainLoopUpdate = 10 #Sets the main loop to update every x ms
+        self.after(self.mainLoopUpdate, self.mainLoop)
 
     def mainLoop(self):
         """
         Main loop will handle comms to the arduino led visualization.
         """
-        while True:
-            #data = self.AudioControl.GetAudioData()
-            #data = self.AudioControl.GetAmplitude()
-            #data = self.AudioControl.GetLargestMagFreq()
-            data = self.AudioControl.GetSixteenFrequencies()
-            #self.AudioControl.PrintSixteenBinsStr()
-            plot = self.binsPlot.plotBins(data)
-            plot.grid(row=0, column=0, rowspan=6, columnspan=7,
-                     padx=self.framePadx, pady=self.framePady, sticky=tk.NSEW)
+        #data = self.AudioControl.GetAudioData()
+        #data = self.AudioControl.GetAmplitude()
+        #data = self.AudioControl.GetLargestMagFreq()
+        data = self.AudioControl.GetSixteenFrequencies()
+        #self.AudioControl.PrintSixteenBinsStr()
+        plot = self.binsPlot.plotBins(data)
+        plot.grid(row=0, column=0, rowspan=6, columnspan=7,
+                    padx=0, pady=0, sticky=tk.NSEW)
 
-            #Sleep to reduce processing
-            time.sleep(0.1)
+        # calls mainloop after 100ms
+        self.after(self.mainLoopUpdate, self.mainLoop)
 
 
     def menuSetup(self):
