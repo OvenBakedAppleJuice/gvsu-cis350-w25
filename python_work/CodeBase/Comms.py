@@ -1,55 +1,66 @@
 import serial
-import threading
-from queue import Queue
-import time
+import serial.tools.list_ports
 
 class USBComm:
-    def __init__(self, dataQueue, LoopDelay, Port='COM8'):
-        self.arduino = serial.Serial(port=Port, baudrate=1000000, timeout=0.01)
-        self.dataQueue = dataQueue
-        self.LoopDelay = LoopDelay
-        self.GreenBtn = False
-        self.thread = None
-        self.__runing = False
+    def __init__(self):
+        self.__arduino = None
 
-    def start(self):
-        self.__runing = True
-        self.thread = threading.Thread(target=self.run)
-        self.thread.daemon = True
-        self.thread.start()
+    def startComm(self, Port):
+        self.__arduino = serial.Serial(port=Port, baudrate=57600, timeout=0.01)
 
-    def stop(self):
-        print("Serial Communication Stoped")
-        self.__runing = False
+    def getPortDesciptions(self):
+        """
+        Lists available serial ports with their descriptions and hardware IDs.
+        Returns list of descriptions ex.) [''].
+        """
+        ports = serial.tools.list_ports.comports()
 
-    def run(self):
-        print("Serial Communication Started")
-        while True:
-            if not self.dataQueue.empty():
-                arduinoData = self.dataQueue.get()
+        if not ports:
+            print("No serial ports found.")
+            return []
 
-                #empty receiver queue
-                while not self.dataQueue.empty():
-                    self.dataQueue.get()
+        print("Available Serial Ports:")
+        port_list = []
+        for port in sorted(ports):
+            print(f"  Port: {port.device}")
+            print(f"    Description: {port.description}")
+            print(f"    Hardware ID: {port.hwid}")
+            print("-" * 30)
+            port_list.append(port.description)
+        
+        return port_list
 
-                #Send the information, send a header first
-                self.arduino.write(b'\xDE\xAD\xBE\xEF')
+    def getPorts(self):
+        """
+        Lists available serial ports with their descriptions and hardware IDs.
+        Returns list of ports ex.) ['COM3, 'COM15'].
+        """
+        ports = serial.tools.list_ports.comports()
 
-                #64 bytes that are sent to arduino
-                self.arduino.write(arduinoData)
+        if not ports:
+            print("No serial ports found.")
+            return []
 
-                #Get Button From ESP32
-                self.GreenBtn = False
-                try:
-                    pySerialInput = self.arduino.readline()
-                    pySerialInput = int(pySerialInput[0])-48
-                    if pySerialInput == 1:
-                        self.GreenBtn = True
-                        break
-                except:
-                    None
-            else:
-                time.sleep(self.LoopDelay)
+        print("Available Serial Ports:")
+        port_list = []
+        for port in sorted(ports):
+            print(f"  Port: {port.device}")
+            print(f"    Description: {port.description}")
+            print(f"    Hardware ID: {port.hwid}")
+            print("-" * 30)
+            port_list.append(port.device)
+        
+        return port_list
 
-            if not self.__runing:
-                break
+    def run(self, arduinoData):
+        #Send the information, send a header first
+        self.__arduino.write(b'\xDE\xAD\xBE\xEF')
+
+        #bytes that are sent to arduino
+        self.__arduino.write(arduinoData)
+
+        # try:
+        #     pySerialInput = self.__arduino.readline()
+        #     pySerialInput = int(pySerialInput[0])-48
+        # except:
+        #     None

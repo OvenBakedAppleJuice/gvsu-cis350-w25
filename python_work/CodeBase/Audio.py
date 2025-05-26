@@ -1,6 +1,7 @@
 import time
 import numpy as np #For converting byte data into arrays
 import pyaudio # For streaming audio in and out
+from scipy.fft import fft, ifft
 
 #for multithreading, and doing the audio IO while doing other stuff
 import threading
@@ -15,13 +16,93 @@ class AudioInput:
         self.__chunk = 2048  # Record in chunks of 1024 samples
         self.__sampleFormat = pyaudio.paInt16  # 16 bits per sample (signed 16 bit)
         self.__channels = 2
-        self.__fs = 44100  # Record at 44100 samples per second
+        self.__fs = 44100  # fs: frequency of sample. Record at 44100 samples per second
         self.__deviceIndex = 0 #This the device that audio will be stream to
         self.__port = pyaudio.PyAudio()  # Create an interface to PortAudio
         self.__q = queue.Queue()
         #These are flags used to stop the audio stream
         self.__stream_running = False
         self.__stream_complete = True
+
+        #Setup up for fft
+        # sample spacing
+        T = 1.0 / self.__fs
+        #X time axis for one audio chunk (lowest detectable freq will be 25 Hz)
+        self.__fft_x = np.linspace(0.0, self.__chunk*T, self.__chunk, endpoint=False)
+
+    def getFft(self):
+        """
+        Sources: 
+        https://docs.scipy.org/doc/scipy/tutorial/fft.html
+        https://pythonnumericalmethods.studentorg.berkeley.edu/notebooks/chapter24.04-FFT-in-Python.html
+        """
+        signal = self.GetAudioData()
+        signal = signal / np.max(np.abs(signal))
+
+        # Apply the FFT. The output is complex.
+        fft_output = np.fft.fft(signal)
+
+        # The magnitude of each complex number in the FFT output.
+        magnitudes = np.abs(fft_output)
+
+        # The frequencies array will have the same length as the fft_output.
+        # numpy.fft.fftfreq helps in generating the correct frequency bins.
+        frequencies = np.fft.fftfreq(self.__chunk, d=1/self.__fs)
+
+        # For a real-valued input signal, the FFT output is symmetric.
+        # We only need the first half (positive frequencies).
+        # The index N/2 + 1 typically includes the DC component (0 Hz) and the Nyquist frequency.
+        num_unique_points = self.__chunk // 2 + 1 # For even N, this is N/2 + 1. For odd N, this is (N+1)/2
+
+        frequencies_positive = frequencies[0:num_unique_points]
+        magnitudes_positive = magnitudes[0:num_unique_points]
+
+        return frequencies_positive, magnitudes_positive
+
+    def GetLargestMagFreq(self):
+        """
+        Returns the frequency with the largest magnitude.
+        """
+        freq, mags = self.getFft()
+        largest = mags.argmax()
+        
+        return freq[largest]
+    
+    def GetSixteenFrequencies(self):
+        freq, mags = self.getFft()
+        freqBins = [(0, 133), (133, 266), (266, 399), (399, 532), (532, 665), (665, 798), 
+                    (798, 931), (931, 1064), (1064, 1197), (1197, 1330), (1330, 1463), 
+                    (1463, 1596), (1596, 1729), (1729, 1862), (1862, 1995), (1995, 20000)]
+        
+        binIndicies = [[] for i in range(16)]
+        binMagnitudes = [0 for i in range(16)]
+
+        # Loop through the indicies
+        for i, bin in enumerate(freqBins):
+            # Get the frequencies in the range of the bin
+            freqInRange = ((bin[0]<=freq) & (freq<bin[1]))
+            # Get the indicies of those frequencies
+            binIndicies[i] = np.where(freqInRange)
+            # Get the magnitude of values in a bin
+            binMagnitudes[i] = mags[binIndicies[i]]
+            
+            #This gets the average value of a bin
+            binMagnitudes[i] = int(np.mean(binMagnitudes[i]))
+
+            # This version gets the max
+            # binMagnitudes[i] = int(max(binMagnitudes[i]))
+        
+        return binMagnitudes
+
+    def PrintSixteenBinsStr(self):
+        """
+        Prints out the bins in a readable form.
+        """
+        data = self.GetSixteenFrequencies()
+        for number in data:
+            print(f" {number:7}", end="")
+        print() # Add a newline at the end
+
 
     def SetDevice(self, device):
         """
@@ -165,3 +246,21 @@ class AudioInput:
         Terminate port at end of program.
         """
         self.__port.terminate()
+
+def freqBins():
+    """
+    Used to generate the bins in GetSixteenFrequencies() function.
+    """
+    i = 0
+    vals = []
+    maxEver = 20000
+    maxVal = 2000
+    iterVal = int(maxVal/15)
+
+    for j in range(15):
+        vals.append((i, i+iterVal))
+        i+=iterVal
+
+    vals.append((i, maxEver))
+
+    print(vals)

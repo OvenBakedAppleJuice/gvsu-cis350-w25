@@ -1,5 +1,6 @@
 from Audio import AudioInput
-# from Comms import USBComm #not used yet but will be helpful later
+from Comms import USBComm 
+from AudioVeiwer import PlotBins
 
 import customtkinter as tk
 
@@ -27,7 +28,7 @@ class Grid:
 
 class AudioViz_GUI(tk.CTk):
     """
-    This is the outer program.
+    This class is the gui and has all the logic for controlling the audio stream and comms.
     """
 
     def __init__(self):
@@ -55,24 +56,42 @@ class AudioViz_GUI(tk.CTk):
         self.AudioControl.ListDevicesStrings()
         self.AudioControl.StartStream()
 
-        #initializes and starts main task
-        main_task = threading.Thread(target=self.mainLoop)
+        self.ArduinoComms = USBComm()
+        #print(self.ArduinoComms.getPortDesciptions())
+        #print(self.ArduinoComms.getPorts())
+
+        #Aduio Veiwer
+        self.binsPlot = PlotBins(self)
+
+        #initializes and starts main task, daemon=True means the thread stops when the main thread stops
+        main_task = threading.Thread(target=self.mainLoop, daemon=True)
         main_task.start()
 
     def mainLoop(self):
+        """
+        Main loop will handle comms to the arduino led visualization.
+        """
         while True:
             #data = self.AudioControl.GetAudioData()
-            data = self.AudioControl.GetAmplitude()
-            print(data)
+            #data = self.AudioControl.GetAmplitude()
+            #data = self.AudioControl.GetLargestMagFreq()
+            data = self.AudioControl.GetSixteenFrequencies()
+            #self.AudioControl.PrintSixteenBinsStr()
+            plot = self.binsPlot.plotBins(data)
+            plot.grid(row=0, column=0, rowspan=6, columnspan=7,
+                     padx=self.framePadx, pady=self.framePady, sticky=tk.NSEW)
 
-            #Sleep for 1ms to reduce processing
-            time.sleep(0.001)
+            #Sleep to reduce processing
+            time.sleep(0.1)
 
 
     def menuSetup(self):
+        """
+        Creates the elements in the gui.
+        """
         options = ["1","2","3"]
         self.dropdown = tk.CTkOptionMenu(self, values=options, command= (lambda x: self.dropdownCallback()))
-        self.dropdown.grid(row=2, column=3, padx=0, pady=0)
+        self.dropdown.grid(row=7, column=0, padx=0, pady=0)
 
     def dropdownCallback(self):
         print("Here")
