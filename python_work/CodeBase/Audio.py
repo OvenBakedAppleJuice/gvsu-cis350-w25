@@ -1,7 +1,6 @@
 import time
 import numpy as np #For converting byte data into arrays
 import pyaudio # For streaming audio in and out
-from scipy.fft import fft, ifft
 
 #for multithreading, and doing the audio IO while doing other stuff
 import threading
@@ -23,6 +22,8 @@ class AudioInput:
         #These are flags used to stop the audio stream
         self.__stream_running = False
         self.__stream_complete = True
+
+        self.audio_int16_array = None
 
         #Setup up for fft
         # sample spacing
@@ -216,9 +217,9 @@ class AudioInput:
             self.__q.get()
 
         # Convert bytes to
-        audio_int16_array = np.frombuffer(sound, dtype=np.int16).view(dtype=np.int16)
+        self.audio_int16_array = np.frombuffer(sound, dtype=np.int16).view(dtype=np.int16)
         #Collecting the max value just to show the data.
-        return audio_int16_array
+        return self.audio_int16_array
 
 
     def GetAmplitude(self):
@@ -226,17 +227,17 @@ class AudioInput:
         Returns an array with 1024 int16 data values. This is the most recent audio chunk.
         """
         # gets command from queue
-        sound = self.__q.get() #currently in 'bytes' format
+        #sound = self.__q.get() #currently in 'bytes' format
 
         #Clears queue if it was not accessed quickly enough
-        while(not self.__q.empty()):
-            self.__q.get()
+        #while(not self.__q.empty()):
+        #    self.__q.get()
 
         # Convert bytes to
-        audio_int16_array = np.frombuffer(sound, dtype=np.int16).view(dtype=np.int16)
+        #self.audio_int16_array = np.frombuffer(sound, dtype=np.int16).view(dtype=np.int16)
 
-        maxVal = audio_int16_array.max()
-        minVal = audio_int16_array.min()
+        maxVal = self.audio_int16_array.max()
+        minVal = self.audio_int16_array.min()
 
         #Collecting the max value just to show the data.
         return maxVal-minVal

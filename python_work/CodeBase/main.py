@@ -7,7 +7,6 @@ import customtkinter as tk
 import sys
 import time
 
-import threading
 
 class Grid:
     """
@@ -59,6 +58,10 @@ class AudioViz_GUI(tk.CTk):
         self.ArduinoComms = USBComm()
         #print(self.ArduinoComms.getPortDesciptions())
         #print(self.ArduinoComms.getPorts())
+        try:
+            self.ArduinoComms.startComm('COM15')
+        except Exception as e:
+            None
 
         #Aduio Veiwer
         self.binsPlot = PlotBins(self)
@@ -68,6 +71,7 @@ class AudioViz_GUI(tk.CTk):
         #main_task.start()
         self.mainLoopUpdate = 10 #Sets the main loop to update every x ms
         self.after(self.mainLoopUpdate, self.mainLoop)
+        self.maxAmplitude = 10000
 
     def mainLoop(self):
         """
@@ -81,6 +85,13 @@ class AudioViz_GUI(tk.CTk):
         plot = self.binsPlot.plotBins(data)
         plot.grid(row=0, column=0, rowspan=6, columnspan=7,
                     padx=0, pady=0, sticky=tk.NSEW)
+        
+        data = (self.AudioControl.GetAmplitude()/self.maxAmplitude)*100
+        print(data)
+        try:
+            self.ArduinoComms.run(data)
+        except Exception as e:
+            None
 
         # calls mainloop after 100ms
         self.after(self.mainLoopUpdate, self.mainLoop)

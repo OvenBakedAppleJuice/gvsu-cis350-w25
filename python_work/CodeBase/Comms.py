@@ -57,7 +57,7 @@ class USBComm:
         self.__arduino.write(b'\xDE\xAD\xBE\xEF')
 
         #bytes that are sent to arduino
-        self.__arduino.write(arduinoData)
+        self.__arduino.write(bytes(arduinoData))
 
         # try:
         #     pySerialInput = self.__arduino.readline()
