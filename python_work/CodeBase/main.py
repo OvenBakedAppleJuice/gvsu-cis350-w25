@@ -59,7 +59,7 @@ class AudioViz_GUI(tk.CTk):
         #print(self.ArduinoComms.getPortDesciptions())
         #print(self.ArduinoComms.getPorts())
         try:
-            self.ArduinoComms.startComm('COM15')
+            self.ArduinoComms.startComm('COM3')
         except Exception as e:
             print(e)
 
@@ -69,9 +69,9 @@ class AudioViz_GUI(tk.CTk):
         #initializes and starts main task, daemon=True means the thread stops when the main thread stops
         #main_task = threading.Thread(target=self.mainLoop, daemon=True)
         #main_task.start()
-        self.mainLoopUpdate = 10 #Sets the main loop to update every x ms
+        self.mainLoopUpdate = 1 #Sets the main loop to update every x ms
         self.after(self.mainLoopUpdate, self.mainLoop)
-        self.maxAmplitude = 10000
+        self.maxAmplitude = 25000
 
     def mainLoop(self):
         """

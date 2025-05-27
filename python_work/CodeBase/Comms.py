@@ -1,17 +1,26 @@
 import serial
 import serial.tools.list_ports
 
+
 class USBComm:
     def __init__(self):
         self.__arduino = None
 
-    def startComm(self, Port):
-        self.__arduino = serial.Serial(port=Port, baudrate=57600, timeout=0.01)
+    def startComm(self, port):
+        """
+        Starts serial communication with the specified port.
+        """
+        try:
+            self.__arduino = serial.Serial(port=port, baudrate=9600, timeout=1)
+            print(f"Connected to {port}")
+        except serial.SerialException as e:
+            print(f"Failed to connect to {port}: {e}")
+            self.__arduino = None
 
-    def getPortDesciptions(self):
+    def getPortDescriptions(self):
         """
         Lists available serial ports with their descriptions and hardware IDs.
-        Returns list of descriptions ex.) [''].
+        Returns list of descriptions, e.g. ['Arduino Uno', 'USB Serial Device'].
         """
         ports = serial.tools.list_ports.comports()
 
@@ -27,13 +36,13 @@ class USBComm:
             print(f"    Hardware ID: {port.hwid}")
             print("-" * 30)
             port_list.append(port.description)
-        
+
         return port_list
 
     def getPorts(self):
         """
-        Lists available serial ports with their descriptions and hardware IDs.
-        Returns list of ports ex.) ['COM3, 'COM15'].
+        Lists available serial ports.
+        Returns list of port names, e.g. ['COM3', 'COM15'].
         """
         ports = serial.tools.list_ports.comports()
 
@@ -49,18 +58,18 @@ class USBComm:
             print(f"    Hardware ID: {port.hwid}")
             print("-" * 30)
             port_list.append(port.device)
-        
+
         return port_list
 
     def run(self, arduinoData):
-        #Send the information, send a header first
-        self.__arduino.write(b'\xDE\xAD\xBE\xEF')
+        if self.__arduino is None:
+            print("Arduino not connected.")
+            return
 
-        #bytes that are sent to arduino
-        self.__arduino.write(bytes(arduinoData))
+        try:
+            data_str = f"{arduinoData:.2f}\n"  # round to 2 decimal places
+            self.__arduino.write(data_str.encode())
+            print(f"Sent: {data_str.strip()}")
+        except Exception as e:
+            print(f"Failed to send data: {e}")
 
-        # try:
-        #     pySerialInput = self.__arduino.readline()
-        #     pySerialInput = int(pySerialInput[0])-48
-        # except:
-        #     None
