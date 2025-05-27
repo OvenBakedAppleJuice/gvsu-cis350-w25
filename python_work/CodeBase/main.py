@@ -61,7 +61,7 @@ class AudioViz_GUI(tk.CTk):
         try:
             self.ArduinoComms.startComm('COM15')
         except Exception as e:
-            None
+            print(e)
 
         #Aduio Veiwer
         self.binsPlot = PlotBins(self)
