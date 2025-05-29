@@ -1,6 +1,7 @@
 from Audio import AudioInput
 from Comms import USBComm 
 from AudioVeiwer import PlotBins
+from GUI.PlayPauseMode import PlayPauseMode
 
 import customtkinter as tk
 
@@ -33,8 +34,11 @@ class AudioViz_GUI(tk.CTk):
     def __init__(self):
         super().__init__()
 
+        #allow passing of data (handled from PlayPauseMode Buttons)
+        self._play_pause_pass = True
+
         #Set up application theme, color, and size
-        self.geometry("750x550")
+        self.geometry("950x550")
         self.minsize(width=750, height=550)
         self.title("Audio Visualizer")
         tk.set_default_color_theme("dark-blue")
@@ -77,24 +81,31 @@ class AudioViz_GUI(tk.CTk):
         """
         Main loop will handle comms to the arduino led visualization.
         """
-        #data = self.AudioControl.GetAudioData()
-        #data = self.AudioControl.GetAmplitude()
-        #data = self.AudioControl.GetLargestMagFreq()
-        data = self.AudioControl.GetSixteenFrequencies()
-        #self.AudioControl.PrintSixteenBinsStr()
-        plot = self.binsPlot.plotBins(data)
-        plot.grid(row=0, column=0, rowspan=6, columnspan=7,
-                    padx=0, pady=0, sticky=tk.NSEW)
         
-        data = (self.AudioControl.GetAmplitude()/self.maxAmplitude)*100
-        print(data)
-        try:
-            self.ArduinoComms.run(data)
-        except Exception as e:
-            None
-
+        # if statement controled by PlayPauseMode buttons, contains handles to graph and Arduino
+        #check if PlayPauseMode -> Play (Button) is enabled to continue loop
+        if self._play_pause_pass:
+            #data = self.AudioControl.GetAudioData()
+            #data = self.AudioControl.GetAmplitude()
+            #data = self.AudioControl.GetLargestMagFreq()
+            data = self.AudioControl.GetSixteenFrequencies()
+            #self.AudioControl.PrintSixteenBinsStr()
+            plot = self.binsPlot.plotBins(data)
+            plot.grid(row=0, column=20, rowspan=6, columnspan=7,
+                        padx=0, pady=0, sticky=tk.NSEW)
+            
+            
+            
+            data = (self.AudioControl.GetAmplitude()/self.maxAmplitude)*100
+            print(data)
+            try:
+                self.ArduinoComms.run(data)
+            except Exception as e:
+                None
+        # Note: upon re-enabling, mainloop will be called
+            
         # calls mainloop after 100ms
-        self.after(self.mainLoopUpdate, self.mainLoop)
+        self.after(self.mainLoopUpdate, self.mainLoop)        
 
 
     def menuSetup(self):
@@ -104,6 +115,12 @@ class AudioViz_GUI(tk.CTk):
         options = ["1","2","3"]
         self.dropdown = tk.CTkOptionMenu(self, values=options, command= (lambda x: self.dropdownCallback()))
         self.dropdown.grid(row=7, column=0, padx=0, pady=0)
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
+        self.play_pause = PlayPauseMode(master=self, height=400)
+        self.play_pause.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
 
     def dropdownCallback(self):
         print("Here")
