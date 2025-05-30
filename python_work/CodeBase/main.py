@@ -34,8 +34,12 @@ class AudioViz_GUI(tk.CTk):
     def __init__(self):
         super().__init__()
 
+        # sensitivity variable (50 - 200) default 100. Might need changing
+        # NOTE: sens doesnt work on the graph but for the arduino (i think)
+        self.sensitivity = 50
+
         #allow passing of data (handled from PlayPauseMode Buttons)
-        self._play_pause_pass = True
+        self._play_pause_pass = False
 
         #Set up application theme, color, and size
         self.geometry("950x550")
@@ -96,7 +100,7 @@ class AudioViz_GUI(tk.CTk):
             
             
             
-            data = (self.AudioControl.GetAmplitude()/self.maxAmplitude)*100
+            data = (self.AudioControl.GetAmplitude()/self.maxAmplitude)*self.sensitivity
             print(data)
             try:
                 self.ArduinoComms.run(data)

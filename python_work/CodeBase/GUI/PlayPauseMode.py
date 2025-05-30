@@ -9,10 +9,17 @@ class PlayPauseMode(ctk.CTkFrame):
         #setup play button in frame
         self.play = ctk.CTkButton(self, text="Start", command=self.playButtonClick)
         self.play.grid(row=10, column=0, padx=20, pady=10)
-
+        
+        #setup slider for sensitivity
+        self.sens_slider = ctk.CTkSlider(master=self, from_=50, to=200, number_of_steps=150, command=self.sliderEvent)
+        self.sens_slider.set(100)
+        self.sens_slider.grid(row=15, column=0, padx=20, pady=3)
+        #label for sensitivity
+        self.sens_label = ctk.CTkLabel(master=self, text=" Sensitivity: ", justify="left", compound="left", anchor="w")
+        self.sens_label.grid(row=14, column=0, padx=20, pady=3, sticky="w")
 
     def playButtonClick(self):
-        if self.play.cget("text") == "Pause/Stop" or self.play.cget("text") == "Start":
+        if self.play.cget("text") == "Pause/Stop":
             # action stops data pass
             self.play.configure(fg_color="#20b502", text="Resume", hover_color="#167d01")
             self.parent._play_pause_pass = False
@@ -20,7 +27,12 @@ class PlayPauseMode(ctk.CTkFrame):
             # action continues data pass
             self.play.configure(fg_color="#db0909", text="Pause/Stop", hover_color="#a10303")
             self.parent._play_pause_pass = True
+
+    #changes sens in main, adjusted on Amplitude multiplier
+    def sliderEvent(self, value):
+        self.parent.sensitivity = value
             
+    
         
         
 
