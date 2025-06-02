@@ -2,6 +2,7 @@ from Audio import AudioInput
 from Comms import USBComm 
 from AudioVeiwer import PlotBins
 from GUI.PlayPauseMode import PlayPauseMode
+from GUI.AudioSourceTab import AudioSourceTab
 
 import customtkinter as tk
 
@@ -42,7 +43,7 @@ class AudioViz_GUI(tk.CTk):
         self._play_pause_pass = False
 
         #Set up application theme, color, and size
-        self.geometry("950x550")
+        self.geometry("1150x550")
         self.minsize(width=750, height=550)
         self.title("Audio Visualizer")
         tk.set_default_color_theme("dark-blue")
@@ -106,7 +107,6 @@ class AudioViz_GUI(tk.CTk):
                 self.ArduinoComms.run(data)
             except Exception as e:
                 None
-        # Note: upon re-enabling, mainloop will be called
             
         # calls mainloop after 100ms
         self.after(self.mainLoopUpdate, self.mainLoop)        
@@ -120,11 +120,16 @@ class AudioViz_GUI(tk.CTk):
         self.dropdown = tk.CTkOptionMenu(self, values=options, command= (lambda x: self.dropdownCallback()))
         self.dropdown.grid(row=7, column=0, padx=0, pady=0)
 
+        # setup for PlayPause Menu
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         self.play_pause = PlayPauseMode(master=self, height=400)
         self.play_pause.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+
+        # setup for AudioSource Tabs
+        self.audio_source_tab = AudioSourceTab(master=self)
+        self.audio_source_tab.grid(row=4, column=0, padx=20, pady=20)
 
     def dropdownCallback(self):
         print("Here")
