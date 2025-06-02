@@ -22,7 +22,7 @@ class AudioSourceTab(ctk.CTkTabview):
         # add widgets on live mic
         mic_options = self.GetListOfMics()
         default_mic = self.GetDefaultMic()
-        self.source_dropdown = ctk.CTkComboBox(master=self.tab("Live Microphone"), values=mic_options, width=250)
+        self.source_dropdown = ctk.CTkComboBox(master=self.tab("Live Microphone"), values=mic_options, width=220)
         self.source_dropdown.set(default_mic)
         self.current_mic = default_mic
         self.source_dropdown.grid(row=0, column=0, padx=20, pady=20)
