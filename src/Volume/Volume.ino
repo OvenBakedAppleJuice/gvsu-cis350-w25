@@ -22,9 +22,11 @@ void loop() {
     int volume = input.toInt(); // Convert to integer
 
     // Constrain to 0–100
+    volume = abs(volume);
     volume = constrain(volume, 0, 100);
 
     // Determine how many rows to light (max 10 rows)
+
     int numRows = map(volume, 0, 100, 0, 16);  // Change 10 to 16 if you want to use full grid
 
     clearLEDs();
