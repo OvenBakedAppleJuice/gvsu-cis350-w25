@@ -71,7 +71,7 @@ class AudioInput:
         
         return freq[largest]
     
-    def GetSixteenFrequencies(self):
+    def GetSixteenFrequencies(self, multiplier):
         freq, mags = self.getFft()
         freqBins = [(0, 100), (100, 160), (160, 220), (220, 280), (280, 340), (340, 400), (400, 460), 
                     (460, 520), (520, 580), (580, 640), (640, 700), (700, 760), (760, 820), 
@@ -90,7 +90,7 @@ class AudioInput:
             binMagnitudes[i] = mags[binIndicies[i]]
             
             #This gets the average value of a bin
-            binMagnitudes[i] = int(np.mean(binMagnitudes[i]))
+            binMagnitudes[i] = int(np.mean(binMagnitudes[i]))*multiplier
 
             # This version gets the max
             # binMagnitudes[i] = int(max(binMagnitudes[i]))
