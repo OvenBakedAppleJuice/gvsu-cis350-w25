@@ -1,6 +1,6 @@
 import time
 import numpy as np #For converting byte data into arrays
-import pyaudio # For streaming audio in and out
+import sounddevice as sd # For streaming audio in and out
 
 #for multithreading, and doing the audio IO while doing other stuff
 import threading
@@ -13,11 +13,10 @@ class AudioInput:
     """
     def __init__(self):
         self.__chunk = 2048  # Record in chunks of 1024 samples
-        self.__sampleFormat = pyaudio.paInt16  # 16 bits per sample (signed 16 bit)
+        self.__sampleFormat = 'int16' # 16 bits per sample (signed 16 bit)
         self.__channels = 2
         self.__fs = 44100  # fs: frequency of sample. Record at 44100 samples per second
         self.__deviceIndex = 0 #This the device that audio will be stream to
-        self.__port = pyaudio.PyAudio()  # Create an interface to PortAudio
         self.__q = queue.Queue()
         #These are flags used to stop the audio stream
         self.__stream_running = False
@@ -30,6 +29,9 @@ class AudioInput:
         T = 1.0 / self.__fs
         #X time axis for one audio chunk (lowest detectable freq will be 25 Hz)
         self.__fft_x = np.linspace(0.0, self.__chunk*T, self.__chunk, endpoint=False)
+
+    def setIndex(self, index):
+        self.__deviceIndex = index
 
     def getFft(self):
         """
@@ -112,41 +114,47 @@ class AudioInput:
         devices = self.ListDevicesNumbers()
 
         if(device in devices):
-            self.__deivceIndex = device
+            self.__deviceIndex = device
         else:
             print("Invalid Device.")
 
     def ListDevicesNumbers(self):
         """
-        Returns a list of available deivce input index's.
+        Lists all available sound input devices using sounddevice.
         """
-        info = self.__port.get_host_api_info_by_index(0)
-        numdevices = info.get('deviceCount')
+        print("Available Input Devices:")
         devices = []
-        for i in range(0, numdevices):
-            if (self.__port.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
-                devices.append(i)
-
-        return devices
+        try:
+            devices = sd.query_devices()
+            for i, device in enumerate(devices):
+                if device['max_input_channels'] > 0:
+                    device = f"  {i}: {device['name']} (Channels: {device['max_input_channels']})"
+                    devices.append(device)
+                    print(device)
+        except Exception as e:
+            print(f"Error querying devices: {e}")
+        
+        deviceNumbers = []
+        for i in range(len(devices)):
+            deviceNumbers.append(i)
+        return deviceNumbers
 
     def ListDevicesStrings(self):
         """
-        Returns a list of strings describing available input devices.
+        Lists all available sound input devices using sounddevice.
         """
-        #List all devices.
-        info = self.__port.get_host_api_info_by_index(0)
-        numdevices = info.get('deviceCount')
+        print("Available Input Devices:")
         devices = []
-        for i in range(0, numdevices):
-            if (self.__port.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
-                string = "Input Device id ", i, " - ", self.__port.get_device_info_by_host_api_device_index(0, i).get('name')
-                print(string)
-                devices.append(string)
-
-            #if (self.__port.get_device_info_by_host_api_device_index(0, i).get('maxOutputChannels')) > 0:
-                # Print out output devices, don't return them as they can't be used.
-                #print("Output Device id ", i, " - ", self.__port.get_device_info_by_host_api_device_index(0, i).get('name'))
-
+        try:
+            devices = sd.query_devices()
+            for i, device in enumerate(devices):
+                if device['max_input_channels'] > 0:
+                    device = f"  {i}: {device['name']} (Channels: {device['max_input_channels']})"
+                    devices.append(device)
+                    print(device)
+        except Exception as e:
+            print(f"Error querying devices: {e}")
+        
         return devices
 
     def StartStream(self):
@@ -165,32 +173,27 @@ class AudioInput:
         """
         Defines a task that will get the audio at regular interval.
         """
-        self.__stream = self.__port.open(format=self.__sampleFormat,
-                channels=self.__channels,
-                rate=self.__fs,
-                frames_per_buffer=self.__chunk,
-                input=True,
-                input_device_index=self.__deviceIndex)
+        with sd.InputStream(samplerate=44100, channels=1, dtype=self.__sampleFormat, device=self.__deviceIndex) as self.__stream:
 
-        #This loop runs abour every 42 ms (1/(48,000 samples/sec)*2048 samples)
-        while True:
-            #Check to see if steam is trying to be closed
-            if not self.__stream_running:
-                break
+            #This loop runs abour every 42 ms (1/(48,000 samples/sec)*2048 samples)
+            while True:
+                #Check to see if steam is trying to be closed
+                if not self.__stream_running:
+                    break
 
-            try:
-                #Reads "chunk" number of samples from microphone. They are read as bytes.
-                sound_data = self.__stream.read(self.__chunk) #blocking function, waits for 1024 samples
+                try:
+                    #Reads "chunk" number of samples from microphone. They are read as bytes.
+                    sound_data, overflow = self.__stream.read(self.__chunk) #blocking function, waits for 1024 samples
 
-                #puts the sound data to the queue so it can be accessed elsewhere
-                self.__q.put(sound_data)
+                    #puts the sound data to the queue so it can be accessed elsewhere
+                    self.__q.put(sound_data)
 
-            except Exception as e:
-                print("LiveView: playing_task, audio_frame_queue is empty.")
-                continue
+                except Exception as e:
+                    print("LiveView: playing_task, audio_frame_queue is empty.")
+                    continue
 
-        #Stream has been closed
-        self.__stream_complete = True
+            #Stream has been closed
+            self.__stream_complete = True
 
     def StopStream(self):
         """
@@ -217,9 +220,10 @@ class AudioInput:
             self.__q.get()
 
         # Convert bytes to
-        self.audio_int16_array = np.frombuffer(sound, dtype=np.int16).view(dtype=np.int16)
+        self.audio_int16_array = sound # np.frombuffer(sound, dtype=np.int16).view(dtype=np.int16)
+        
         #Collecting the max value just to show the data.
-        return self.audio_int16_array
+        return sound
 
 
     def GetAmplitude(self):

@@ -99,6 +99,7 @@ class AudioViz_GUI(tk.CTk):
             #data = self.AudioControl.GetAmplitude()
             #data = self.AudioControl.GetLargestMagFreq()
             data = self.AudioControl.GetSixteenFrequencies()
+            
             #self.AudioControl.PrintSixteenBinsStr()
             plot = self.binsPlot.plotBins(data)
             plot.grid(row=0, column=2, padx=0, pady=0)
@@ -106,7 +107,8 @@ class AudioViz_GUI(tk.CTk):
             
             
             data = (self.AudioControl.GetAmplitude()/self.maxAmplitude)*self.sensitivity
-            print(data)
+            # print(data)
+            # self.AudioControl.PrintSixteenBinsStr()
             try:
                 self.ArduinoComms.run(data)
             except Exception as e:

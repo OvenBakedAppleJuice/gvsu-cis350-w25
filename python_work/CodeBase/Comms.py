@@ -69,7 +69,7 @@ class USBComm:
         try:
             data_str = f"{arduinoData:.2f}\n"  # round to 2 decimal places
             self.__arduino.write(data_str.encode())
-            print(f"Sent: {data_str.strip()}")
+            # print(f"Sent: {data_str.strip()}")
         except Exception as e:
             print(f"Failed to send data: {e}")
 

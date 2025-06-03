@@ -25,7 +25,7 @@ class PlotBins:
         self.ax.set_yticks([])
         self.ax.set_ylabel("Volume")
         self.ax.set_xlabel("Frequency")
-        self.ax.set_ylim(0, 2000000)
+        self.ax.set_ylim(0, 4000)
         self.ax.set_xlim(0, 17)
 
         self.canvas = FigureCanvasTkAgg(fig, master=self.root)
@@ -34,8 +34,8 @@ class PlotBins:
     def plotBins(self, bins):
         for patch in self.barContainer.patches:
             patch.remove()
-        
-        self.barContainer = self.ax.bar(self.x_pos, bins, color='blue')
 
+        self.barContainer = self.ax.bar(self.x_pos, bins, color='blue')
+        
         self.canvas.draw()
         return self.canvas.get_tk_widget()
