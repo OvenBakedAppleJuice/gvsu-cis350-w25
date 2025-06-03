@@ -14,7 +14,6 @@ class AudioSourceTab(ctk.CTkTabview):
         self.file_path = None
         self.is_current_audio = 0 
 
-
         #create tabs
         self.add("Live Microphone")
         self.add("System Audio")
@@ -28,14 +27,16 @@ class AudioSourceTab(ctk.CTkTabview):
         self.source_dropdown.grid(row=0, column=0, padx=20, pady=20)
 
         #add widgets on System Audio
-        self.file_label = ctk.CTkLabel(master=self.tab("System Audio"), text="No file selected")
+        self.file_label = ctk.CTkLabel(master=self.tab("System Audio"), text="No file selected", anchor="w")
         self.select_file_button = ctk.CTkButton(master=self.tab("System Audio"), text="Select File", fg_color="#ffe7a3", hover_color="#dbc893", text_color="black", command=self.browseFile, border_color="black")
-        self.file_label.grid(row=0, column=0, padx=20, pady=5)
-        self.select_file_button.grid(row=1, column=0, padx=20, pady=10)
+        self.file_label.grid(row=0, column=0, padx=20, pady=0)
+        self.select_file_button.grid(row=1, column=0, padx=20, pady=2)
 
         self.current_checkbox = ctk.CTkCheckBox(master=self.tab("System Audio"), text="Use current system audio", command=self.currentCheckboxEvent)
-        self.current_checkbox.grid(row=2, column=0, padx=20, pady=10)
+        self.current_checkbox.grid(row=2, column=0, padx=20, pady=3)
 
+        # diable stretching within frame
+        self.grid_propagate(False)
 
     # REGION for Live Microphone
     def sourceDropDownEvent(self, choice):
@@ -72,6 +73,12 @@ class AudioSourceTab(ctk.CTkTabview):
             print("User Selected file: ", file_path)
             self.file_label.configure(text=file_path)
             self.file_path = file_path
+            self.enabledAudioFilePlayer(self.file_path)
+
+    def enabledAudioFilePlayer(self, file_path: str):
+        print(f"======Path {file_path}")
+        self.parent.audio_file_player.startUpPlayerFromPath(file_path)
+        self.file_label.configure(text=file_path.split("/")[-1])
 
     def currentCheckboxEvent(self):
         self.majorChangeEvent()
