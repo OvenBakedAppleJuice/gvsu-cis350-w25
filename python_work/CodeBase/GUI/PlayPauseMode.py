@@ -6,7 +6,8 @@ class PlayPauseMode(ctk.CTkFrame):
         super().__init__(master,**kwargs)
         self.parent = master
 
-        self.configure(height=200, width=200)
+        self.configure(height=200, width=250)
+        self.grid_propagate(False)
 
         #setup play button in frame
         self.play = ctk.CTkButton(self, text="Start", command=self.playButtonClick)

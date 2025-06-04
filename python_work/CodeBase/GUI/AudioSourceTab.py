@@ -15,7 +15,8 @@ class AudioSourceTab(ctk.CTkTabview):
         self.file_path = None
         self.is_current_audio = 0 
 
-        self.configure(height=200, width=220)
+        self.configure(height=200, width=250)
+        self.grid_propagate(False)
 
         #create tabs
         self.add("Live Microphone")
@@ -24,7 +25,7 @@ class AudioSourceTab(ctk.CTkTabview):
         # add widgets on live mic
         mic_options = self.GetListOfMics()
         default_mic = self.GetDefaultMic()
-        self.source_dropdown = ctk.CTkComboBox(master=self.tab("Live Microphone"), values=mic_options, width=220)
+        self.source_dropdown = ctk.CTkComboBox(master=self.tab("Live Microphone"), values=mic_options, width=200)
         self.source_dropdown.set(default_mic)
         self.current_mic = default_mic
         self.source_dropdown.grid(row=0, column=0, padx=20, pady=20)
@@ -82,13 +83,14 @@ class AudioSourceTab(ctk.CTkTabview):
         self.file_label.configure(text=text)
 
     def currentCheckboxEvent(self):
-        self.majorChangeEvent()
-        self.is_current_audio = self.current_checkbox.get()
-        # disable file select if true
-        if self.is_current_audio == 1:
-            self.select_file_button.configure(state="disabled")
-        else:
-            self.select_file_button.configure(state="enabled")
+        # self.majorChangeEvent()
+        # self.is_current_audio = self.current_checkbox.get()
+        # # disable file select if true
+        # if self.is_current_audio == 1:
+        #     self.select_file_button.configure(state="disabled")
+        # else:
+        #     self.select_file_button.configure(state="enabled")
+        pass
 
 
     # REGION general

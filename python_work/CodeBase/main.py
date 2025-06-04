@@ -44,7 +44,7 @@ class AudioViz_GUI(tk.CTk):
         self._play_pause_pass = False
 
         #Set up application theme, color, and size
-        self.geometry("950x600")
+        self.geometry("1050x600")
         self.minsize(width=750, height=550)
         self.title("Audio Visualizer")
         tk.set_default_color_theme("dark-blue")
