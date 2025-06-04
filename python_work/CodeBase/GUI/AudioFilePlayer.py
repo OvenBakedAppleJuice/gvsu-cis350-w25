@@ -35,14 +35,14 @@ class AudioFilePlayer(ctk.CTkFrame):
         if self.file_path == None:
             return -1       #this shouldnt be possible
         if self.play_pause.cget("text") == "Pause":
-            self.play_pause.configure(text="Resume", fg_color="#f01414", hover_color="#333E70")
+            self.play_pause.configure(text="Resume", fg_color="#4888ff", hover_color="#3763C2")
             pygame.mixer.music.pause()
         elif self.play_pause.cget("text") == "Resume":
-            self.play_pause.configure(text="Pause", fg_color="#74a2f7", hover_color="#172132")
+            self.play_pause.configure(text="Pause", fg_color="#a9c7ff", hover_color="#7287AA")
             # resume the music
             pygame.mixer.music.unpause()
         else:
-            self.play_pause.configure(text="Pause", fg_color="#74a2f7")
+            self.play_pause.configure(text="Pause", fg_color="#a9c7ff", hover_color="#7287AA")
             # playsound will block the thread, so this is not ideal for a GUI
             if not pygame.mixer.get_init():
                 pygame.mixer.init()
@@ -63,35 +63,38 @@ class AudioFilePlayer(ctk.CTkFrame):
         self.file_name_label.configure(text=f"Using: {self.file_name}")
 
     def resetPlayer(self):
-        self.play_pause.configure(text="Play", fg_color="#74a2f7", hover_color="#344A6E")
+        self.play_pause.configure(text="Play", fg_color="#4888ff", hover_color="#3763C2")
         self.disabledAllWidgets()
         self.enableAllWidgets()
 
 
     def enableAllWidgets(self):
         self.active = True
-        for widget in self.winfo_children():
+        for widget in self.widgets:
             try:
                 if isinstance(widget, ctk.CTkLabel):
                     widget.configure(text_color="#ffffff")
                 else:
-                    widget.configure(state="enabled")
+                    if isinstance(widget, ctk.CTkButton):
+                        widget.configure(state="normal")
             except Exception:
                 pass    #some widgets like label dont have state
 
     def disabledAllWidgets(self):
         self.active = False
-        for widget in self.winfo_children():
+        for widget in self.widgets:
             try:
                 if isinstance(widget, ctk.CTkLabel):
                     widget.configure(text_color="#828282")
                 else:
-                    widget.configure(state="disabled")
+                    if isinstance(widget, ctk.CTkButton):
+                        widget.configure(state="disabled")
             except Exception:
                 pass    #some widgets like label dont have state
 
     def menuSetup(self): 
         # add items to frame
+        # NOTE ensure items are added to list
         self.frame_title = ctk.CTkLabel(master=self, text="MP3 File Player", font=("Roboto", 15))
         self.frame_title.grid(row=0, column=0, padx=5, pady=5)
 
@@ -106,5 +109,7 @@ class AudioFilePlayer(ctk.CTkFrame):
 
         self.file_name_label = ctk.CTkLabel(master=self, text=f"Using: {self.file_name}", font=("Roboto", 15), width=200)
         self.file_name_label.grid(row=0, column=1, padx=5, pady=5)
+
+        self.widgets = [self.frame_title, self.play_pause, self.restart_btn, self.file_volume, self.file_name_label]
 
     
