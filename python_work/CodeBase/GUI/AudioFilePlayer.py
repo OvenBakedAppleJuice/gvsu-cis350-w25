@@ -1,7 +1,6 @@
 import customtkinter as ctk
 import pyaudio
-from playsound import playsound
-
+import pygame
 
 class AudioFilePlayer(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
@@ -14,24 +13,8 @@ class AudioFilePlayer(ctk.CTkFrame):
         self._file_path = None
         self._file_name = None
 
+        self.menuSetup()
         
-        # add items to frame
-        self.frame_title = ctk.CTkLabel(master=self, text="MP3 File Player", font=("Roboto", 15))
-        self.frame_title.grid(row=0, column=0, padx=5, pady=5)
-
-        self.play_pause = ctk.CTkButton(master=self, text="Play", command=self.playPauseSound)
-        self.play_pause.grid(row=1, column=0, padx=5, pady=5)
-
-        self.restart_btn = ctk.CTkButton(master=self, text="Restart")
-        self.restart_btn.grid(row=2, column=0, padx=5, pady=5)
-
-        self.file_volume= ctk.CTkSlider(master=self)
-        self.file_volume.grid(row=4, column=0, padx=5, pady=5)
-
-        self.file_name_label = ctk.CTkLabel(master=self, text=f"Using: {self.file_name}", font=("Roboto", 15), width=200)
-        self.file_name_label.grid(row=0, column=1, padx=5, pady=5)
-
-
         # start disabled
         self.disabledAllWidgets()
 
@@ -52,18 +35,38 @@ class AudioFilePlayer(ctk.CTkFrame):
         if self.file_path == None:
             return -1       #this shouldnt be possible
         if self.play_pause.cget("text") == "Pause":
-            self.play_pause.configure(text="Play", fg_color="#035afc", hover_color="#333E70")
+            self.play_pause.configure(text="Resume", fg_color="#f01414", hover_color="#333E70")
+            pygame.mixer.music.pause()
+        elif self.play_pause.cget("text") == "Resume":
+            self.play_pause.configure(text="Pause", fg_color="#74a2f7", hover_color="#172132")
+            # resume the music
+            pygame.mixer.music.unpause()
         else:
-            self.play_pause.configure(text="Pause", fg_color="#74a2f7", hover_color="#476396")
+            self.play_pause.configure(text="Pause", fg_color="#74a2f7")
+            # playsound will block the thread, so this is not ideal for a GUI
+            if not pygame.mixer.get_init():
+                pygame.mixer.init()
+            pygame.mixer.music.load(self.file_path)
+            pygame.mixer.music.play()
+
+
 
 
     def startUpPlayerFromPath(self, file_path: str):
         # WILL NEED to implement method to stop current audio
         if not self.active:
             self.enableAllWidgets()
+        else:
+            self.resetPlayer()
         # auto sets file_name
         self.file_path = file_path
         self.file_name_label.configure(text=f"Using: {self.file_name}")
+
+    def resetPlayer(self):
+        self.play_pause.configure(text="Play", fg_color="#74a2f7", hover_color="#344A6E")
+        self.disabledAllWidgets()
+        self.enableAllWidgets()
+
 
     def enableAllWidgets(self):
         self.active = True
@@ -86,5 +89,22 @@ class AudioFilePlayer(ctk.CTkFrame):
                     widget.configure(state="disabled")
             except Exception:
                 pass    #some widgets like label dont have state
+
+    def menuSetup(self): 
+        # add items to frame
+        self.frame_title = ctk.CTkLabel(master=self, text="MP3 File Player", font=("Roboto", 15))
+        self.frame_title.grid(row=0, column=0, padx=5, pady=5)
+
+        self.play_pause = ctk.CTkButton(master=self, text="Play", command=self.playPauseSound, hover_color="#476396", fg_color="#74a2f7", text_color="white")
+        self.play_pause.grid(row=1, column=0, padx=5, pady=5)
+
+        self.restart_btn = ctk.CTkButton(master=self, text="Restart")
+        self.restart_btn.grid(row=2, column=0, padx=5, pady=5)
+
+        self.file_volume= ctk.CTkSlider(master=self)
+        self.file_volume.grid(row=4, column=0, padx=5, pady=5)
+
+        self.file_name_label = ctk.CTkLabel(master=self, text=f"Using: {self.file_name}", font=("Roboto", 15), width=200)
+        self.file_name_label.grid(row=0, column=1, padx=5, pady=5)
 
     
