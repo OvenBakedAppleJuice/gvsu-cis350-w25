@@ -99,11 +99,13 @@ class AudioViz_GUI(tk.CTk):
             #data = self.AudioControl.GetAmplitude()
             #data = self.AudioControl.GetLargestMagFreq()
             data = self.AudioControl.GetSixteenFrequencies()
+            
+            # for color input as HSV select just H from play_pause.hsv_color
+            # h_color = self.self.play_pause.getHsvColor()[0]
+
             #self.AudioControl.PrintSixteenBinsStr()
             plot = self.binsPlot.plotBins(data)
             plot.grid(row=0, column=2, padx=0, pady=0)
-            
-            
             
             data = (self.AudioControl.GetAmplitude()/self.maxAmplitude)*self.sensitivity
             print(data)
@@ -130,11 +132,11 @@ class AudioViz_GUI(tk.CTk):
         # self.grid_columnconfigure(1, weight=1)
 
         self.play_pause = PlayPauseMode(master=self, height=400)
-        self.play_pause.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+        self.play_pause.grid(row=0, column=0, padx=20, pady=5, sticky="nsew")
 
         # setup for AudioSource Tabs
         self.audio_source_tab = AudioSourceTab(master=self)
-        self.audio_source_tab.grid(row=4, column=0, padx=20, pady=20)
+        self.audio_source_tab.grid(row=4, column=0, padx=20, pady=5)
 
         #setup for AudioFilePlayer
         self.audio_file_player = AudioFilePlayer(master=self)

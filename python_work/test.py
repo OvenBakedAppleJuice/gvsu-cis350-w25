@@ -1,29 +1,12 @@
-import tkinter as tk
-from tkinter import *
+import customtkinter
+from CTkColorPicker import *
 
-# use https://www.geeksforgeeks.org/create-first-gui-application-using-python-tkinter/
+class App(customtkinter.CTk):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
-root = Tk()
+        self.cp = CTkColorPicker(master=self, width=200, command=lambda e: print(e))
+        self.cp.pack(padx=10, pady=10)
 
-#change title of the window
-root.title("BTripleJ")
-
-#set geometry of window
-root.geometry('350x200')
-
-# # #label widget
-# a = Label(root, text = "Hello")
-
-# # fit a object to root window
-# a.pack()
-
-# NOTE pack() and gird() cannot be used together
-
-#new lbl using grid
-lbl = Label(root, text = "cis350")
-# place it in default open cell (which would be 0,0 in this case)
-lbl.grid()
-
-
-#render and take inputs
-root.mainloop()
+app = App()
+app.mainloop()

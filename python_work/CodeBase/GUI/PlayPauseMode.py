@@ -1,25 +1,18 @@
 import customtkinter as ctk
+from GUI.ColorSelectFrame import ColorSelectFrame
 # from main import AudioViz_GUI
 
 class PlayPauseMode(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master,**kwargs)
-        self.parent = master
 
-        self.configure(height=200, width=250)
+        self.configure(height=400, width=250)
         self.grid_propagate(False)
 
-        #setup play button in frame
-        self.play = ctk.CTkButton(self, text="Start", command=self.playButtonClick)
-        self.play.grid(row=10, column=0, padx=20, pady=10)
-        
-        #setup slider for sensitivity
-        self.sens_slider = ctk.CTkSlider(master=self, from_=50, to=200, number_of_steps=150, command=self.sliderEvent)
-        self.sens_slider.set(100)
-        self.sens_slider.grid(row=15, column=0, padx=20, pady=3)
-        #label for sensitivity
-        self.sens_label = ctk.CTkLabel(master=self, text=" Sensitivity: ", justify="left", compound="left", anchor="w")
-        self.sens_label.grid(row=14, column=0, padx=20, pady=3, sticky="w")
+        self.menuSetup()
+
+        self.color_hsv = None
+
 
     def playButtonClick(self):
         if self.play.cget("text") == "Pause/Stop":
@@ -34,6 +27,27 @@ class PlayPauseMode(ctk.CTkFrame):
     #changes sens in main, adjusted on Amplitude multiplier
     def sliderEvent(self, value):
         self.parent.sensitivity = value
+
+    # grab color select hsv value
+    def getHsvColor(self):
+        return self.color_frame._hsv
+
+    def menuSetup(self):
+        #setup play button in frame
+        self.play = ctk.CTkButton(self, text="Start", command=self.playButtonClick)
+        self.play.grid(row=10, column=0, padx=20, pady=10)
+        
+        #setup slider for sensitivity
+        self.sens_slider = ctk.CTkSlider(master=self, from_=50, to=200, number_of_steps=150, command=self.sliderEvent)
+        self.sens_slider.set(100)
+        self.sens_slider.grid(row=15, column=0, padx=20, pady=3)
+        #label for sensitivity
+        self.sens_label = ctk.CTkLabel(master=self, text=" Sensitivity: ", justify="left", compound="left", anchor="w")
+        self.sens_label.grid(row=14, column=0, padx=20, pady=3, sticky="w")
+
+        # add color picker, color picker sets by hex but returns hsv values
+        self.color_frame = ColorSelectFrame(master=self, width=230, height=310)
+        self.color_frame.grid(row=16, column=0, padx=1, pady=2)
             
     
         
