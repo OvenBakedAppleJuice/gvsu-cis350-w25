@@ -1,0 +1,12 @@
+With Binaries:
+pyinstaller --onefile --noconsole --collect-all CTkColorPicker --add-binary "ffmpeg.exe:." --add-binary "ffprobe.exe:." AudioVizGUI.py
+Without Binaries:
+pyinstaller --onefile --collect-all CTkColorPicker AudioVizGUI.py
+With Binaries more correct?
+pyinstaller --onefile --noconsole --collect-all CTkColorPicker --add-binary "ffmpeg.exe:ffmpeg.exe" --add-binary "ffprobe.exe:ffprobe.exe" AudioVizGUI.py
+
+pyinstaller --onefile --collect-all CTkColorPicker --add-binary "ffmpeg.exe:ffmpeg.exe" --add-binary "ffprobe.exe:ffprobe.exe" AudioVizGUI.py
+
+pyinstaller --onefile --collect-all CTkColorPicker --add-binary "C:\Users\2022j\Downloads\CIS 350 HW\AudioVizGUI_Build\ffmpeg.exe:ffmpeg.exe" --add-binary "C:\Users\2022j\Downloads\CIS 350 HW\AudioVizGUI_Build\ffprobe.exe:ffprobe.exe" AudioVizGUI.py
+
+pyinstaller --onefile --collect-all CTkColorPicker --add-binary "C:\Users\2022j\Downloads\CIS 350 HW\AudioVizGUI_Build\ffmpeg.exe:." --add-binary "C:\Users\2022j\Downloads\CIS 350 HW\AudioVizGUI_Build\ffprobe.exe:." AudioVizGUI.py
