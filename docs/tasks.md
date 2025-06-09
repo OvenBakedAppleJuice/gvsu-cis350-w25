@@ -29,13 +29,11 @@ Expected time to complete:
 Monday or Tuesday, After we pick our check-in date
 Assigned to: __ALL__
 
-
-
 # Any hidden issues with Ardiuno should be resolved
 - There are some current comm issues on python end
 - There could be issues on Ardiuno end, needs testing
 - Verify both LED strings works the same
-
+- 
 Expected time to complete: 
 End of Wednesday, preferably before all comm issues are solved
 Assigned to: __Jason and Blake__ 
@@ -124,7 +122,6 @@ Assigned to: __Jason__
 Expected time to complete: 
 3 days at most
 Assigned to: __Jason__
-
 
 # Create a button that allows the user to control the systems ability to grab audio data - Completed
 - Simple start and stop button to stop data from flowing
