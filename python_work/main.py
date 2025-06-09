@@ -68,7 +68,7 @@ class AudioViz_GUI(tk.CTk):
         self.menuSetup()
 
         #Runs the main loop
-        self.mainLoopUpdate = 10 #Sets the main loop to update every x ms
+        self.mainLoopUpdate = 20 #Sets the main loop to update every x ms
         self.after(self.mainLoopUpdate, self.mainLoop)
 
     def switchArduinoAudioMode(self):
@@ -84,7 +84,8 @@ class AudioViz_GUI(tk.CTk):
     
     def mainLoop(self):
         """
-        Main loop will handle comms to the arduino led visualization.
+        Main loop will handle comms to the arduino led visualization. Different from mainloop() 
+        which is an internal function that calls the GUI display functions and handles the callbacks.
         """
         AudioFileIsRunning = self.AudioControl.getAudioStreamRunning()
         if AudioFileIsRunning:

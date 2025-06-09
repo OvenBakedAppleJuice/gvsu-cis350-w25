@@ -52,13 +52,22 @@ class AudioFilePlayer(ctk.CTkFrame):
 
     # Restart Sound
     def restartSound(self):
+        """
+        Stops audio and resets to 0 seconds.
+        """
         if self.file_path == None:
             return -1       #this shouldnt be possible
         self.parent.AudioControl.RestartPlayingAudioFile()
         self.play_pause.configure(text="Play", fg_color="#4888ff", hover_color="#3763C2")
+        self.updateTimeDisplay()
+        self.audio_timeline.set(0)
+
 
     # Volume Slider
     def volumeChange(self, volume: float):
+        """
+        Change volume of audio file, can happen in real time.
+        """
         if self.file_path == None:
             return -1       #this shouldnt be possible
         volume = volume
@@ -86,6 +95,9 @@ class AudioFilePlayer(ctk.CTkFrame):
                 self.audio_timeline.configure(from_=0, to=time, number_of_steps=200)
 
     def resetPlayer(self):
+        """
+        Resets file player widgets.
+        """
         self.play_pause.configure(text="Play", fg_color="#4888ff", hover_color="#3763C2")
         self.disabledAllWidgets()
         self.enableAllWidgets()
@@ -104,11 +116,12 @@ class AudioFilePlayer(ctk.CTkFrame):
 
     def UpdateStartTime(self, startTime):
         """
-        Stops the current program and moves to the correct spot.
+        Stops the current program and moves to the spot in the file selected by the slider.
         """
         self.parent.AudioControl.EndPlayingAudioFile()
         self.parent.AudioControl.setStartTime(startTime)
         self.startUpPlayerFromPath(self.file_path)
+        self.audio_timeline_cur_time.configure(text=f"{int(startTime//60):02}:{int(startTime%60):02}")
 
 
     def enableAllWidgets(self):

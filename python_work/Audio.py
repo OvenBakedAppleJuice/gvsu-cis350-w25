@@ -27,6 +27,7 @@ class AudioInput:
         self.__port = pyaudio.PyAudio()  # Create an interface to PortAudio
         self.__stream = None
         self.__q = queue.Queue()
+        self.playing_task = None
         
         #These are variables used to stop the audio input stream
         self.__input_stream_running = False
@@ -140,9 +141,23 @@ class AudioInput:
         https://docs.scipy.org/doc/scipy/tutorial/fft.html
         https://pythonnumericalmethods.studentorg.berkeley.edu/notebooks/chapter24.04-FFT-in-Python.html
         """
+        #tapers start and end of audio chunk 9to and from 0) to improve fft quality
         signal = self.GetAudioData()
-        # signal = signal / np.max(np.abs(signal))
-
+        start = np.linspace(0, signal[9], 9).astype(np.int16)
+        end = np.linspace(signal[-9], 0, 9).astype(np.int16)
+        middle = signal[10:-9].astype(np.int16)
+        # print("Start")
+        # print(start)
+        # print("End")
+        # print(end)
+        # print("Middle Signal")
+        # print(middle)
+        # print("Complete Signal: ")
+        # print(np.concatenate(start,signal[10:-10]))
+        # print(help(np.concatenate))
+        signal = np.concatenate((start, middle, end), axis=None)
+        # print(len(signal)) for some reason this is 4095, in theory it should be 2048
+        
         # Apply the FFT. The output is complex.
         fft_output = np.fft.fft(signal)
 
@@ -389,7 +404,7 @@ class AudioInput:
 
             try:
                 #Reads "chunk" number of samples from microphone. They are read as bytes.
-                sound_data = self.__stream.read(self.__chunk) #blocking function, waits for 1024 samples
+                sound_data = self.__stream.read(self.__chunk) #blocking function, waits for chunk samples
 
                 #puts the sound data to the queue so it can be accessed elsewhere
                 self.__q.put(sound_data)
