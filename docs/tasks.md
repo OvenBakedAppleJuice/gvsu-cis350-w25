@@ -32,7 +32,8 @@ Assigned to: __ALL__
 # Any hidden issues with Ardiuno should be resolved
 - There are some current comm issues on python end
 - There could be issues on Ardiuno end, needs testing
-
+- Verify both LED strings works the same
+- 
 Expected time to complete: 
 End of Wednesday, preferably before all comm issues are solved
 Assigned to: __Jason and Blake__ 
@@ -62,6 +63,13 @@ Assigned to: __Joey__
 Expected time to complete: 
 2 days at most, suggest looking at premade color selectors
 Assigned to: __Josh__
+
+# Take pattern input and determine if requency or volume  - Completed
+- Take Serial Input and find out the lenght
+
+Expected time to complete: 
+3 days at most
+Assigned to: __Jason__
 
 # Ardiuno needs to be able to take a color input - Completed
 - Add a way, possibly another value that takes input for color
@@ -93,6 +101,28 @@ Expected time to complete:
 1 day
 Assigned to: __Josh__
 
+# Generate Frequency on LEDs  - Completed
+- Take Serial Input and have correct leds light up
+
+Expected time to complete: 
+3 days at most
+Assigned to: __Jason__
+
+# Generate Volume Bars on LEDs  - Completed
+- Take Serial Input and have correct leds light up
+
+Expected time to complete: 
+3 days at most
+Assigned to: __Jason__
+
+# Read Serial Data and print to console  - Completed
+- understand how to collect data 
+- how to count number of inputs
+
+Expected time to complete: 
+3 days at most
+Assigned to: __Jason__
+
 # Create a button that allows the user to control the systems ability to grab audio data - Completed
 - Simple start and stop button to stop data from flowing
 
@@ -107,6 +137,20 @@ Assigned to: __Josh__
 Expected time to complete: 
 4 days at most
 Assigned to: __Joey__
+
+# Get LED strip working with FASTled Libray  - Completed
+- use example code to verfiy LEDs work 
+
+Expected time to complete: 
+3 days at most
+Assigned to: __Jason__
+
+# Wire LED to Arduino  - Completed
+- use example code to verfiy LEDs work 
+
+Expected time to complete: 
+3 days at most
+Assigned to: __Jason__
 
 # Agree on the GUI layout - Completed
 - Select a way to create a GUI
