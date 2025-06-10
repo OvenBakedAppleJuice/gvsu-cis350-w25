@@ -2,7 +2,7 @@
 
 #define LED_PIN     6
 #define NUM_LEDS    256
-#define BRIGHTNESS  100
+#define BRIGHTNESS  75
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER GRB
 
