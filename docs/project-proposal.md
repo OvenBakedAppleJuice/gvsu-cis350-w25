@@ -66,6 +66,7 @@ Final Testing Checkpoint (June 1)
 
 
 # Estimated Timeline
+The project will have 4 major milestones, one of which is already completed. We are using the Agile-Scrum Method.
 
 (Figure out what your major milestones for this project will be, including how long you anticipate it may take to reach that point)
 The project will have 4 major milestones, one of which is already completed. We are using the Agile-Scrum Method.
