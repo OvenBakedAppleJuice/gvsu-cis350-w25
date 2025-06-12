@@ -7,15 +7,29 @@ from pydub import AudioSegment
 import threading
 import queue
 import os
+import sys
 
 class AudioInput:
     """
     This class is used for streaming and processing the audio.
     """
     def __init__(self):
+        # Determine the base path for resources
+        if hasattr(sys, '_MEIPASS'):
+            # Running in a PyInstaller bundle
+            base_path = sys._MEIPASS
+        else:
+            # Running in a normal Python environment for development
+            base_path = ""
+
+        # Construct the full paths to the binaries
+        ffmpeg_path = os.path.join(base_path, 'ffmpeg.exe')
+        ffprobe_path = os.path.join(base_path, 'ffprobe.exe')
+
+
         # Used by pydub to convert mp3 files to wave files
-        AudioSegment.converter = 'ffmpeg.exe'
-        AudioSegment.ffprobe = 'ffprobe.exe'
+        AudioSegment.converter = ffmpeg_path
+        AudioSegment.ffprobe = ffprobe_path
 
         #Used by pyaudio to stream audio
         self.__chunk = 2048  # Record in chunks of 1024 samples
