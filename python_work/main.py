@@ -105,13 +105,16 @@ class AudioViz_GUI(tk.CTk):
             plot.grid(row=0, column=2, padx=0, pady=0)
                 
             if self.ArduinoAmpMode:
-                color = str(self.play_pause.getHsvColor())
+                color = int(hsv_color)
+                color = str(color)
                 amplitude = str(self.AudioControl.GetAmplitude())
                 data = color + "," + amplitude
+
                 print(f"Data is {data}")
 
             if self.ArduinoFreqMode:
-                color = str(self.play_pause.getHsvColor())
+                color = int(hsv_color)
+                color = str(color)
                 data = self.AudioControl.GetSixteenFrequencies()
                 # Get min and max values
                 min_val = 0
