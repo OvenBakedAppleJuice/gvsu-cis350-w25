@@ -92,7 +92,9 @@ class AudioViz_GUI(tk.CTk):
             self.audio_file_player.updateTimeDisplay()
         
         color = self.play_pause.getHexInt()
-        print(color)
+        # print(color)
+        hsv_color = self.play_pause.getHsvColor()[0]
+        print(hsv_color)
 
         # if statement controled by PlayPauseMode buttons, contains handles to graph and Arduino
         #check if PlayPauseMode -> Play (Button) is enabled to continue loop
@@ -107,8 +109,6 @@ class AudioViz_GUI(tk.CTk):
                 amplitude = str(self.AudioControl.GetAmplitude())
                 data = color + "," + amplitude
                 print(f"Data is {data}")
-
-
 
             if self.ArduinoFreqMode:
                 color = str(self.play_pause.getHsvColor())

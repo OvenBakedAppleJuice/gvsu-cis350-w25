@@ -6,7 +6,7 @@ class ColorSelectFrame(ctk.CTkFrame):
         super().__init__(master, **kwargs)
 
         self._hex = "#ffffff"
-        self._hsv = 0
+        self._hsv = self.hex_to_hsv(self._hex)
         self._intColor = 0
 
         self.color_picker = CTkColorPicker(self, width=230, height=160, command=self.colorChanged)
@@ -45,4 +45,4 @@ class ColorSelectFrame(ctk.CTkFrame):
         # Value
         v = max_c
 
-        return (h, s, v)
+        return h, s, v
