@@ -91,6 +91,9 @@ class AudioViz_GUI(tk.CTk):
         if AudioFileIsRunning:
             self.audio_file_player.updateTimeDisplay()
         
+        color = self.play_pause.getHexInt()
+        print(color)
+
         # if statement controled by PlayPauseMode buttons, contains handles to graph and Arduino
         #check if PlayPauseMode -> Play (Button) is enabled to continue loop
         if self._play_pause_pass or AudioFileIsRunning:

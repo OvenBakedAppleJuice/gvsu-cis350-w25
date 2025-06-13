@@ -46,6 +46,9 @@ class PlayPauseMode(ctk.CTkFrame):
     # grab color select hsv value
     def getHsvColor(self):
         return self.color_frame._hsv
+    
+    def getHexInt(self):
+        return self.color_frame._intColor
 
     def menuSetup(self):
         #setup play button in frame

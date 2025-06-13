@@ -7,17 +7,18 @@ class ColorSelectFrame(ctk.CTkFrame):
 
         self._hex = "#ffffff"
         self._hsv = 0
+        self._intColor = 0
 
         self.color_picker = CTkColorPicker(self, width=230, height=160, command=self.colorChanged)
         self.color_picker.pack(padx=1, pady=1)
 
     def colorChanged(self, new_value):
         self._hex = new_value
+        hexNoHashtag = self._hex[1:]
+        self._intColor = int(hexNoHashtag, 16) #converts sting of base 16 to int
         self._hsv = self.hex_to_hsv(self._hex)
-        
 
-
-    def hex_to_hsv(hex_color):
+    def hex_to_hsv(self, hex_color):
         """Convert a hex color (e.g., '#FF5733') to HSV (Hue [0–360], Saturation/Value [0–1])"""
         hex_color = hex_color.lstrip('#')
         r = int(hex_color[0:2], 16) / 255.0
