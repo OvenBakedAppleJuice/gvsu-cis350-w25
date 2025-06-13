@@ -8,7 +8,7 @@ from GUI.AudioFilePlayer import AudioFilePlayer
 import customtkinter as tk
 
 import sys
-import time
+import time 
 
 
 class Grid:
@@ -100,9 +100,26 @@ class AudioViz_GUI(tk.CTk):
             plot.grid(row=0, column=2, padx=0, pady=0)
                 
             if self.ArduinoAmpMode:
-                data = self.AudioControl.GetAmplitude()
-                print(data)
-            
+                color = str(self.play_pause.getHsvColor())
+                amplitude = str(self.AudioControl.GetAmplitude())
+                data = color + "," + amplitude
+                print(f"Data is {data}")
+
+
+
+            if self.ArduinoFreqMode:
+                color = str(self.play_pause.getHsvColor())
+                data = self.AudioControl.GetSixteenFrequencies()
+                # Get min and max values
+                min_val = 0
+                max_val = 500000
+                # Scale to integers from 0 to 16
+                scaled = [round((x - min_val) / (max_val - min_val) * 16) for x in data]
+                # Create comma-separated string
+                formatted_result =  ",".join(str(x) for x in scaled)
+
+                data = color + "," + formatted_result
+
             if self.ArduinoControl.isConnected():
                 try:
                     self.ArduinoControl.run(data)

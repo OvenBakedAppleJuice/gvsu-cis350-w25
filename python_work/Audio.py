@@ -135,6 +135,8 @@ class AudioInput:
         #Collecting the max value just to show the data.
         return abs(round((maxVal-minVal)/self.__max_amplitude*100*self.__sensativity_multiplier))
 
+
+
     def __getFft(self):
         """
         Sources: 
